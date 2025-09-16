@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPosts } from './postsSlice';
+import './PostList.css';
 
 const PostList = () => {
   const dispatch = useDispatch();
@@ -21,14 +22,19 @@ const PostList = () => {
   }
 
   return (
-    <div>
+    <div >
       {items.map((post) => (
-        <div key={post.id} style={{borderBottom: "1px solid #ccc", margin: "10px 0", padding: "10px"}}>
-          <h3>{post.title}</h3>
-          <p>👍 {post.ups} | 💬 {post.num_comments}</p>
+        <div key={post.id} className='post-container'>
+          <div className='post-image'>
           {post.thumbnail && post.thumbnail.startsWith('http') && (
-            <img src={post.thumbnail} alt={post.title} width="100" />
+            <img src={post.thumbnail} alt={post.title}  />
           )}
+          </div>
+          <div className='post-description'>
+          <h3>{post.title}</h3>
+          <h5>by {post.author}</h5>
+          <p>👍 {post.ups} | 💬 {post.num_comments}</p>
+          </div>
         </div>
       ))}
     </div>
