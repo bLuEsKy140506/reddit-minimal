@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import './PostDetail.css';
 
 function PostDetail() {
   const { postId } = useParams();
