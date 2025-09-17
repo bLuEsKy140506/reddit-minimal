@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import './PostDetail.css';
+import CommentsList from "../comments/CommentsList";
 
 function PostDetail() {
   const { postId } = useParams();
@@ -32,6 +33,7 @@ function PostDetail() {
       />
 
       <p>{post.selftext || "No text content"}</p>
+      <CommentsList postId={post.id} />
     </div>
   );
 }

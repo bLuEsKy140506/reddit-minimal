@@ -2,7 +2,7 @@
 A React + Redux project fetching data from Reddit’s API.
 
 ## Wireframes
-![Home Page Wireframe](./docs/home-wireframe.png)
+![Home Page Wireframe](./docs/wireframes-illustration-1.png)
 
 ## Technologies
 - React
