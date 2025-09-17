@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchComments } from "./commentsSlice";
 
@@ -11,29 +11,39 @@ function CommentsList({ postId }) {
   }, [dispatch, postId]);
 
   if (status === "loading") {
-    return <p>Loading comments...</p>;
+    return <p className="text-center text-gray-500 mt-4">Loading comments...</p>;
   }
 
   if (status === "failed") {
-    return <p>Error: {error}</p>;
+    return <p className="text-center text-red-500 mt-4">Error: {error}</p>;
   }
 
   const comments = items[postId] || [];
 
   function formatTime(utcSeconds) {
-  const date = new Date(utcSeconds * 1000); // convert to ms
-  return date.toLocaleString(); // e.g. "9/17/2025, 2:30:00 PM"
-}
+    const date = new Date(utcSeconds * 1000);
+    return date.toLocaleString();
+  }
 
   return (
-    <div className="comments">
-      <h3>Comments</h3>
-      {comments.map((comment) => (
-  <div key={comment.id} className="comment">
-    <p><strong>{comment.author}</strong>: {comment.body}</p>
-    <small>{formatTime(comment.created_utc)}</small>
-  </div>
-))}
+    <div className="w-full max-w-md mx-auto mt-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">Comments</h3>
+      <div className="space-y-4">
+        {comments.map((comment) => (
+          <div
+            key={comment.id}
+            className="p-3 border rounded-lg shadow-sm bg-white"
+          >
+            <p className="text-gray-800">
+              <strong className="text-blue-600">{comment.author}</strong>:{" "}
+              {comment.body}
+            </p>
+            <small className="text-gray-500 text-sm block mt-1">
+              {formatTime(comment.created_utc)}
+            </small>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

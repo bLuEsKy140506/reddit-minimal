@@ -1,20 +1,23 @@
 
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PostList from "./features/posts/PostList";
 import PostDetail from "./features/posts/PostDetail";
 import SearchBar from './components/SearchBar';
 import FilterDropdown from "./components/FilterDropDown";
+import Header from "./components/Header";
 
 function App() {
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", fontFamily: "Arial", textAlign: "center" }}>
+    <div>
+      
       <Router>
         <Routes>
           <Route
             path="/"
             element={
               <>
-                <h1>Reddit Minimal</h1>
+                <Header />
                 <SearchBar />
                 <FilterDropdown />
                 <PostList />
