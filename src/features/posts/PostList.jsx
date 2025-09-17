@@ -8,6 +8,8 @@ const PostList = () => {
   const dispatch = useDispatch();
   const { items, status, error } = useSelector((state) => state.posts);
 
+  const defaultImage = "https://placehold.co/150x100?text=No+Image";
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPosts());
@@ -23,31 +25,32 @@ const PostList = () => {
   }
 
   return (
-    <div >
-      {items.map((post) => (
-      
-           
-         
-        <div key={post.id} className='post-container'>
-            <Link to={`/${post.id}`}>
-          <div className='post-image'>
-          {post.thumbnail && post.thumbnail.startsWith('http') && (
-            <img src={post.thumbnail} alt={post.title}  />
-          )}
-          </div>
-          </Link>
-          <div className='post-description'>
-            <Link to={`/${post.id}`}>
+    <div>
+      {items.map((post) => {
+        // Only keep if it's a valid URL
+        const isValidImage = post.thumbnail && post.thumbnail.startsWith("http");
 
-          <h3>{post.title}</h3>
+        return (
+          <div key={post.id} className="post-container">
+            <Link to={`/${post.id}`}>
+              <div className="post-image">
+                <img
+                  src={isValidImage ? post.thumbnail : defaultImage}
+                  alt={post.title}
+                  onError={(e) => (e.target.src = defaultImage)} // fallback if image fails
+                />
+              </div>
             </Link>
-
-          <h5>by {post.author}</h5>
-          <p>👍 {post.ups} | 💬 {post.num_comments}</p>
+            <div className="post-description">
+              <Link to={`/${post.id}`}>
+                <h3>{post.title}</h3>
+              </Link>
+              <h5>by {post.author}</h5>
+              <p>👍 {post.ups} | 💬 {post.num_comments}</p>
+            </div>
           </div>
-        </div>
-        
-      ))}
+        );
+      })}
     </div>
   );
 };

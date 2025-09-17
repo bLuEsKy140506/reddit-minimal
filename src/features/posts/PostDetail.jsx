@@ -5,14 +5,17 @@ function PostDetail() {
   const { postId } = useParams();
   const navigate = useNavigate();
 
-  // Assume posts are in state.posts.items
   const post = useSelector((state) =>
     state.posts.items.find((p) => p.id === postId)
   );
 
+  const defaultImage = "https://placehold.co/300x200?text=No+Image";
+
   if (!post) {
     return <p>Loading...</p>;
   }
+
+  const isValidImage = post.thumbnail && post.thumbnail.startsWith("http");
 
   return (
     <div className="post-detail">
@@ -20,11 +23,13 @@ function PostDetail() {
       <h2>{post.title}</h2>
       <p>By {post.author}</p>
       <p>👍 {post.ups} | 💬 {post.num_comments}</p>
-      
-      {post.thumbnail && post.thumbnail.startsWith("http") && (
-        <img src={post.thumbnail} alt={post.title} />
-      )}
-      
+
+      <img
+        src={isValidImage ? post.thumbnail : defaultImage}
+        alt={post.title}
+        onError={(e) => (e.target.src = defaultImage)} // fallback if load fails
+      />
+
       <p>{post.selftext || "No text content"}</p>
     </div>
   );
