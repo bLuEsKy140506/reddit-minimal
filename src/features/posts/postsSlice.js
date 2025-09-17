@@ -1,11 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Async thunk to fetch posts
+// Fetch posts from Reddit
 export const fetchPosts = createAsyncThunk(
   'posts/fetchPosts',
-  async () => {
-    const response = await axios.get('https://www.reddit.com/r/popular.json');
+  async ({ searchTerm, subreddit } = {}) => {
+    let url = 'https://www.reddit.com/r/popular.json';
+
+    if (searchTerm) {
+      url = `https://www.reddit.com/search.json?q=${searchTerm}`;
+    } else if (subreddit) {
+      url = `https://www.reddit.com/r/${subreddit}.json`;
+    }
+
+    const response = await axios.get(url);
     return response.data.data.children.map(post => post.data);
   }
 );
@@ -16,8 +24,16 @@ const postsSlice = createSlice({
     items: [],
     status: 'idle',
     error: null,
+    selectedPost: null,
   },
-  reducers: {},
+  reducers: {
+    selectPost: (state, action) => {
+      state.selectedPost = action.payload;
+    },
+    clearSelectedPost: (state) => {
+      state.selectedPost = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
@@ -25,7 +41,6 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload)
         state.items = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
@@ -34,5 +49,7 @@ const postsSlice = createSlice({
       });
   },
 });
+
+export const { selectPost, clearSelectedPost } = postsSlice.actions;
 
 export default postsSlice.reducer;
