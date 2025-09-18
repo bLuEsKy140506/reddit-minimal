@@ -1,27 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+// Async thunk to fetch comments via your Vercel proxy
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async (postId) => {
-    const response = await fetch(`/api/comments/${postId}`);
-    if (!response.ok) throw new Error("Failed to fetch comments");
-    const data = await response.json();
-
-    return data[1].data.children
-      .map((c) => ({
-        id: c.data.id,
-        author: c.data.author,
-        body: c.data.body,
-        created_utc: c.data.created_utc,
-      }))
-      .sort((a, b) => b.created_utc - a.created_utc);
+    const res = await fetch(`/api/reddit?postId=${postId}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch comments");
+    }
+    return { postId, comments: await res.json() };
   }
 );
 
 const commentsSlice = createSlice({
   name: "comments",
   initialState: {
-    items: {},
+    items: {}, // keyed by postId
     status: "idle",
     error: null,
   },
@@ -30,11 +24,11 @@ const commentsSlice = createSlice({
     builder
       .addCase(fetchComments.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const postId = action.meta.arg;
-        state.items[postId] = action.payload;
+        state.items[action.payload.postId] = action.payload.comments;
       })
       .addCase(fetchComments.rejected, (state, action) => {
         state.status = "failed";
