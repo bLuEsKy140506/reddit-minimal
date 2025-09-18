@@ -1,45 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Async thunk to fetch comments for a post
+
 // export const fetchComments = createAsyncThunk(
 //   "comments/fetchComments",
 //   async (postId) => {
 //     const response = await fetch(`http://localhost:5000/comments/${postId}`);
-
-//     if (!response.ok) {
-//       throw new Error("Failed to fetch comments");
-//     }
+//     if (!response.ok) throw new Error("Failed to fetch comments");
 
 //     const data = await response.json();
-//     return data[1].data.children.map((c) => c.data);
+
+//     // Extract comments
+//     let comments = data[1].data.children.map((c) => {
+//       const d = c.data;
+//       return {
+//         id: d.id,
+//         author: d.author,
+//         body: d.body,
+//         created_utc: d.created_utc, // raw timestamp
+//       };
+//     });
+
+//     // ✅ Sort: most recent first
+//     comments.sort((a, b) => b.created_utc - a.created_utc);
+
+//     return comments;
 //   }
 // );
 
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async (postId) => {
-    const response = await fetch(`http://localhost:5000/comments/${postId}`);
+    const response = await fetch(`/api/comments/${postId}`);
     if (!response.ok) throw new Error("Failed to fetch comments");
-
     const data = await response.json();
 
-    // Extract comments
-    let comments = data[1].data.children.map((c) => {
-      const d = c.data;
-      return {
-        id: d.id,
-        author: d.author,
-        body: d.body,
-        created_utc: d.created_utc, // raw timestamp
-      };
-    });
-
-    // ✅ Sort: most recent first
-    comments.sort((a, b) => b.created_utc - a.created_utc);
-
-    return comments;
+    return data[1].data.children.map((c) => ({
+      id: c.data.id,
+      author: c.data.author,
+      body: c.data.body,
+      created_utc: c.data.created_utc,
+    })).sort((a, b) => b.created_utc - a.created_utc); // ✅ most recent first
   }
 );
+
 
 
 const commentsSlice = createSlice({
@@ -69,3 +72,4 @@ const commentsSlice = createSlice({
 });
 
 export default commentsSlice.reducer;
+
