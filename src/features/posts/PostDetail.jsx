@@ -54,13 +54,10 @@ function PostDetail() {
       </p>
 
       <img
-        src={
-          post.thumbnail && post.thumbnail.startsWith("http")
-            ? post.thumbnail
-            : defaultImage
-        }
-        alt={post.title}
-        className="rounded-xl mb-4"
+         src={isValidImage ? post.thumbnail : defaultImage}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.target.src = defaultImage)}
       />
 
       {post.selftext && <p className="mb-6">{post.selftext}</p>}
