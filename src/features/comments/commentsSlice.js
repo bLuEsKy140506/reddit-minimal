@@ -3,8 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async (postId) => {
-    // ✅ Calls your Vercel API route instead of Reddit directly
-    const response = await fetch(`/api/comments/${postId}`);
+    const response = await fetch(`/api/comments/${postId}.json`);
     if (!response.ok) throw new Error("Failed to fetch comments");
 
     const data = await response.json();
@@ -16,7 +15,7 @@ export const fetchComments = createAsyncThunk(
         body: c.data.body,
         created_utc: c.data.created_utc,
       }))
-      .sort((a, b) => b.created_utc - a.created_utc); // newest first
+      .sort((a, b) => b.created_utc - a.created_utc);
   }
 );
 

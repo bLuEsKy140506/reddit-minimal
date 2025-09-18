@@ -1,9 +1,8 @@
 {
-  "functions": {
-    "api/comments/[postId].js": {
-      "runtime": "nodejs20.x",
-      "maxDuration": 30,
-      "memory": 1024
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://www.reddit.com/$1"
     }
-  }
+  ]
 }
