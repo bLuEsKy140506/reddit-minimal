@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchComments } from "../comments/commentsSlice";
-import CommentsList from "../comments/CommentList";
+import CommentsList from "../comments/CommentsList";
 
 function PostDetail() {
   const { postId } = useParams();
