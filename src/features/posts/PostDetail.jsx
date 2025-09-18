@@ -24,6 +24,7 @@ function PostDetail() {
   }, [dispatch, postId]);
 
   const defaultImage = "https://placehold.co/300x200?text=No+Image";
+  const isValidImage = typeof post.thumbnail === "string" && post.thumbnail.startsWith("http");
 
   if (!post) {
     return (
