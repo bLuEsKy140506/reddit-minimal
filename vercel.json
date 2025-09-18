@@ -1,7 +1,9 @@
 {
   "functions": {
     "api/comments/[postId].js": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 1024
     }
   }
 }
