@@ -1,13 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+// ✅ Async thunk to fetch comments by postId
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async (postId) => {
-    const response = await fetch(`/api/comments/${postId}.json`);
-    if (!response.ok) throw new Error("Failed to fetch comments");
+    const response = await fetch(`/api/comments/${postId}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch comments: ${response.status}`);
+    }
 
     const data = await response.json();
 
+    // Reddit returns an array → [postInfo, commentsList]
+    if (!Array.isArray(data) || !data[1]?.data?.children) {
+      throw new Error("Unexpected Reddit API response format");
+    }
+
+    // Map and sort comments (newest first)
     return data[1].data.children
       .map((c) => ({
         id: c.data.id,
@@ -22,7 +32,7 @@ export const fetchComments = createAsyncThunk(
 const commentsSlice = createSlice({
   name: "comments",
   initialState: {
-    items: {},
+    items: {}, // comments by postId
     status: "idle",
     error: null,
   },
