@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchComments } from "../comments/commentsSlice";
+import CommentsList from "../comments/CommentList";
 
 function PostDetail() {
   const { postId } = useParams();
@@ -24,7 +25,8 @@ function PostDetail() {
   }, [dispatch, postId]);
 
   const defaultImage = "https://placehold.co/300x200?text=No+Image";
-  const isValidImage = typeof post.thumbnail === "string" && post.thumbnail.startsWith("http");
+  const isValidImage =
+    typeof post?.thumbnail === "string" && post.thumbnail.startsWith("http");
 
   if (!post) {
     return (
@@ -55,31 +57,17 @@ function PostDetail() {
       </p>
 
       <img
-         src={isValidImage ? post.thumbnail : defaultImage}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => (e.target.src = defaultImage)}
+        src={isValidImage ? post.thumbnail : defaultImage}
+        alt={post.title}
+        className="w-full h-full object-cover"
+        onError={(e) => (e.target.src = defaultImage)}
       />
 
       {post.selftext && <p className="mb-6">{post.selftext}</p>}
 
       {/* Comments section */}
       <h3 className="text-xl font-semibold mt-6 mb-3">Comments</h3>
-      {status === "loading" && <p>Loading comments...</p>}
-      {status === "failed" && <p className="text-red-500">{error}</p>}
-      {status === "succeeded" && comments.length === 0 && <p>No comments.</p>}
-      {comments.map((comment) => (
-        <div
-          key={comment.id}
-          className="border-b border-gray-200 py-2 text-left"
-        >
-          <p className="font-semibold">{comment.author}</p>
-          <p>{comment.body}</p>
-          <p className="text-xs text-gray-500">
-            {new Date(comment.created_utc * 1000).toLocaleString()}
-          </p>
-        </div>
-      ))}
+      <CommentsList comments={comments} status={status} error={error} />
     </div>
   );
 }
