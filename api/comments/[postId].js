@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const { postId } = req.query;
 
   try {
-    // 1. Get OAuth token
+    // 1. Request OAuth token
     const tokenResponse = await fetch("https://www.reddit.com/api/v1/access_token", {
       method: "POST",
       headers: {
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
     const { access_token } = await tokenResponse.json();
 
-    // 2. Fetch comments
+    // 2. Fetch Reddit comments
     const redditRes = await fetch(`https://oauth.reddit.com/comments/${postId}`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
